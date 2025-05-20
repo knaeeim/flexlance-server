@@ -1,5 +1,5 @@
 const express = require("express");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const cors = require("cors");
 const port = process.env.PORT || 3000;
@@ -23,13 +23,27 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect();
 
-        const postedData = client.db("flexlance").collection("postedData");
+        const postedDataCollection = client.db("flexlance").collection("postedData");
         const userCollection = client.db("flexlance").collection("users");
 
         app.get('/', (req, res) => {
             res.send('Flexlance server is running');
+        })
+
+        // get a specific user
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await userCollection.findOne(query);
+            if(user){
+                res.send(user);
+            }
+            else{
+                res.status(404).send({message: 'User not found'});
+            }
+            
         })
 
         // POST API for user data
@@ -39,14 +53,37 @@ async function run() {
         })
 
         app.post('/users', async (req, res) => {
+            console.log(req.body);
             const user = req.body;
             const result = await userCollection.insertOne(user);
             res.send(result);
         })
 
 
+        // POST API for posted data
+        app.get('/allData', async (req, res) => {
+            const allData = await postedDataCollection.find().toArray();
+            res.send(allData);
+        })
+
+        // single Data
+        app.get('/allData/:id', async (req, res) => {
+            console.log(req.params.id);
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await postedDataCollection.findOne(query);
+            res.send(result);
+        })
+
+
+        app.post('/addTask', async (req, res) => {
+            const task = req.body;
+            const result = await postedDataCollection.insertOne(task);
+            res.send(result);
+        })
+
         // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
+        // await client.db("admin").command({ ping: 1 });
         console.log(
             "Pinged your deployment. You successfully connected to MongoDB!"
         );
