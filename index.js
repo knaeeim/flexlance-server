@@ -47,11 +47,11 @@ async function run() {
             
         // })
 
-        // // POST API for user data
-        // app.get('/users', async (req, res) => {
-        //     const user = await userCollection.find().toArray()
-        //     res.send(user);
-        // })
+        // POST API for user data
+        app.get('/users', async (req, res) => {
+            const user = await userCollection.find().toArray()
+            res.send(user);
+        })
 
         // user creation post api
         app.post('/users', async (req, res) => {
