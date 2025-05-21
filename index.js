@@ -33,19 +33,19 @@ async function run() {
         //     res.send('Flexlance server is running');
         // })
 
-        // // get a specific user
-        // app.get('/users/:email', async (req, res) => {
-        //     const email = req.params.email;
-        //     const query = { email: email };
-        //     const user = await userCollection.findOne(query);
-        //     if(user){
-        //         res.send(user);
-        //     }
-        //     else{
-        //         res.status(404).send({message: 'User not found'});
-        //     }
+        // get a specific user
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await userCollection.findOne(query);
+            if(user){
+                res.send(user);
+            }
+            else{
+                res.status(404).send({message: 'User not found'});
+            }
             
-        // })
+        })
 
         // POST API for user data
         app.get('/users', async (req, res) => {
