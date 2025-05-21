@@ -61,11 +61,11 @@ async function run() {
         // })
 
 
-        // // POST API for posted data
-        // app.get('/allData', async (req, res) => {
-        //     const allData = await postedDataCollection.find().toArray();
-        //     res.send(allData);
-        // })
+        // get API for posted data
+        app.get('/allData', async (req, res) => {
+            const allData = await postedDataCollection.find().toArray();
+            res.send(allData);
+        })
 
         // single Data
         app.get('/allData/:id', async (req, res) => {
