@@ -29,9 +29,12 @@ async function run() {
         const postedDataCollection = client.db("flexlance").collection("postedData");
         const userCollection = client.db("flexlance").collection("users");
 
-        // app.get('/', (req, res) => {
-        //     res.send('Flexlance server is running');
-        // })
+        app.get("/alldatabyemail/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const result = await postedDataCollection.find(query).toArray();
+            res.send(result);
+        })
 
         // get a specific user
         app.get('/users/:email', async (req, res) => {
