@@ -29,6 +29,7 @@ async function run() {
         const postedDataCollection = client.db("flexlance").collection("postedData");
         const userCollection = client.db("flexlance").collection("users");
 
+        //fetching all data by email
         app.get("/alldatabyemail/:email", async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
@@ -36,7 +37,7 @@ async function run() {
             res.send(result);
         })
 
-        // get a specific user
+        // get a specific user by email
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
@@ -56,7 +57,7 @@ async function run() {
             res.send(user);
         })
 
-        // user creation post api
+        // user creation post API
         app.post('/users', async (req, res) => {
             console.log(req.body);
             const user = req.body;
@@ -80,7 +81,36 @@ async function run() {
             res.send(result);
         })
 
+        // Update a specific data
+        app.put('/updateData/:id', async (req, res) =>{
+            const id = req.params.id;
+            const data = req.body;
+            const filter = { _id: new ObjectId(id) };
+            const updatedDoc = {
+                $set: {
+                    ...data
+                }
+            }
+            const result = await postedDataCollection.updateOne(filter, updatedDoc);
+            res.send(result);
+        })
 
+        // update bid count only 
+        app.patch("/updateData/:email", async (req, res) => {
+            const email = req.params.email;
+            const bid = req.body;
+            const option = { upsert: true };
+            const filter = { email: email };
+            const updatedDoc = {
+                $set: {
+                    bidCount: bid
+                }
+            } 
+            const result = await postedDataCollection.updateOne(filter, updatedDoc, option);
+            res.send(result); 
+        })
+
+        // add task api
         app.post('/addTask', async (req, res) => {
             const task = req.body;
             const result = await postedDataCollection.insertOne(task);
