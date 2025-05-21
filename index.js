@@ -96,12 +96,26 @@ async function run() {
             res.send(result);
         })
 
-        // update bid count only 
+
+        app.patch("/updateData/:id", async (req, res) => {
+            const id = req.params.id;
+            const { bidCount } = req.body;
+            const filter = { _id: new ObjectId(id) };
+            const updateDoc = {
+                $set: {
+                    bidCount : bidCount
+                }
+            }
+            const result = await postedDataCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        })
+
         app.post("/bidCount", async (req, res) => {
             const bid = req.body;
             const result = await bidCountCollection.insertOne(bid);
             res.send(result); 
         })
+
 
         // add task api
         app.post('/addTask', async (req, res) => {
