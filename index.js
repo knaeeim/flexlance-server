@@ -75,6 +75,36 @@ async function run() {
             res.send(result);
         })
 
+        //data fetching by Email
+        app.get("/alldatabyemail/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const result = await postedDataCollection.find(query).toArray();
+            res.send(result);
+        })
+
+        // Update a specific data
+        app.put('/updateData/:id', async (req, res) =>{
+            const id = req.params.id;
+            const data = req.body;
+            const filter = { _id: new ObjectId(id) };
+            const updatedDoc = {
+                $set: {
+                    ...data
+                }
+            }
+            const result = await postedDataCollection.updateOne(filter, updatedDoc);
+            res.send(result);
+        })
+
+        // delete a specific data
+        app.delete('/deleteData/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id : new ObjectId(id) };
+            const result = await postedDataCollection.deleteOne(query);
+            res.send(result);
+        })
+
 
         app.post('/addTask', async (req, res) => {
             const task = req.body;
