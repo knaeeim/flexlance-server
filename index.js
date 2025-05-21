@@ -53,12 +53,13 @@ async function run() {
         //     res.send(user);
         // })
 
-        // app.post('/users', async (req, res) => {
-        //     console.log(req.body);
-        //     const user = req.body;
-        //     const result = await userCollection.insertOne(user);
-        //     res.send(result);
-        // })
+        // user creation post api
+        app.post('/users', async (req, res) => {
+            console.log(req.body);
+            const user = req.body;
+            const result = await userCollection.insertOne(user);
+            res.send(result);
+        })
 
 
         // get API for posted data
