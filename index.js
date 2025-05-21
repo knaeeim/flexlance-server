@@ -20,6 +20,7 @@ const client = new MongoClient(uri, {
         deprecationErrors: true,
     },
 });
+
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
@@ -28,43 +29,43 @@ async function run() {
         const postedDataCollection = client.db("flexlance").collection("postedData");
         const userCollection = client.db("flexlance").collection("users");
 
-        app.get('/', (req, res) => {
-            res.send('Flexlance server is running');
-        })
+        // app.get('/', (req, res) => {
+        //     res.send('Flexlance server is running');
+        // })
 
-        // get a specific user
-        app.get('/users/:email', async (req, res) => {
-            const email = req.params.email;
-            const query = { email: email };
-            const user = await userCollection.findOne(query);
-            if(user){
-                res.send(user);
-            }
-            else{
-                res.status(404).send({message: 'User not found'});
-            }
+        // // get a specific user
+        // app.get('/users/:email', async (req, res) => {
+        //     const email = req.params.email;
+        //     const query = { email: email };
+        //     const user = await userCollection.findOne(query);
+        //     if(user){
+        //         res.send(user);
+        //     }
+        //     else{
+        //         res.status(404).send({message: 'User not found'});
+        //     }
             
-        })
+        // })
 
-        // POST API for user data
-        app.get('/users', async (req, res) => {
-            const user = await userCollection.find().toArray()
-            res.send(user);
-        })
+        // // POST API for user data
+        // app.get('/users', async (req, res) => {
+        //     const user = await userCollection.find().toArray()
+        //     res.send(user);
+        // })
 
-        app.post('/users', async (req, res) => {
-            console.log(req.body);
-            const user = req.body;
-            const result = await userCollection.insertOne(user);
-            res.send(result);
-        })
+        // app.post('/users', async (req, res) => {
+        //     console.log(req.body);
+        //     const user = req.body;
+        //     const result = await userCollection.insertOne(user);
+        //     res.send(result);
+        // })
 
 
-        // POST API for posted data
-        app.get('/allData', async (req, res) => {
-            const allData = await postedDataCollection.find().toArray();
-            res.send(allData);
-        })
+        // // POST API for posted data
+        // app.get('/allData', async (req, res) => {
+        //     const allData = await postedDataCollection.find().toArray();
+        //     res.send(allData);
+        // })
 
         // single Data
         app.get('/allData/:id', async (req, res) => {
@@ -72,36 +73,6 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await postedDataCollection.findOne(query);
-            res.send(result);
-        })
-
-        //data fetching by Email
-        app.get("/alldatabyemail/:email", async (req, res) => {
-            const email = req.params.email;
-            const query = { email: email };
-            const result = await postedDataCollection.find(query).toArray();
-            res.send(result);
-        })
-
-        // Update a specific data
-        app.put('/updateData/:id', async (req, res) =>{
-            const id = req.params.id;
-            const data = req.body;
-            const filter = { _id: new ObjectId(id) };
-            const updatedDoc = {
-                $set: {
-                    ...data
-                }
-            }
-            const result = await postedDataCollection.updateOne(filter, updatedDoc);
-            res.send(result);
-        })
-
-        // delete a specific data
-        app.delete('/deleteData/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id : new ObjectId(id) };
-            const result = await postedDataCollection.deleteOne(query);
             res.send(result);
         })
 
