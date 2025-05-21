@@ -28,6 +28,7 @@ async function run() {
 
         const postedDataCollection = client.db("flexlance").collection("postedData");
         const userCollection = client.db("flexlance").collection("users");
+        const bidCountCollection = client.db("flexlance").collection("bidCount");
 
         //fetching all data by email
         app.get("/alldatabyemail/:email", async (req, res) => {
@@ -96,17 +97,9 @@ async function run() {
         })
 
         // update bid count only 
-        app.patch("/updateData/:email", async (req, res) => {
-            const email = req.params.email;
+        app.post("/bidCount", async (req, res) => {
             const bid = req.body;
-            const option = { upsert: true };
-            const filter = { email: email };
-            const updatedDoc = {
-                $set: {
-                    bidCount: bid
-                }
-            } 
-            const result = await postedDataCollection.updateOne(filter, updatedDoc, option);
+            const result = await bidCountCollection.insertOne(bid);
             res.send(result); 
         })
 
