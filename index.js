@@ -52,6 +52,14 @@ async function run() {
             
         })
 
+        app.get('/category', async (req, res) => {
+            const category = req.query.category;
+            console.log(category);
+            const query = { category: category }; 
+            const result = await postedDataCollection.find(query).toArray(); 
+            res.send(result);
+        })
+
         // POST API for user data
         app.get('/users', async (req, res) => {
             const user = await userCollection.find().toArray()
@@ -102,8 +110,7 @@ async function run() {
             const { bidCount } = req.body;
             const filter = { _id: new ObjectId(id) };
             const updateDoc = {
-                $set: {
-                    bidCount : bidCount
+                $set: { bidCount : bidCount
                 }
             }
             const result = await postedDataCollection.updateOne(filter, updateDoc);
